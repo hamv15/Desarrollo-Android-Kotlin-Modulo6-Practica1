@@ -4,11 +4,13 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.LinearLayout
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.hamv15.modulo6practica1.R
 import com.hamv15.modulo6practica1.application.Modulo6Practica1App
@@ -47,12 +49,19 @@ class MainActivity : AppCompatActivity() {
 
                 }
             )
+            dialog.show(supportFragmentManager, "updatedIALOG")
         }
+
+        binding.rvCars.apply {
+            layoutManager = LinearLayoutManager(this@MainActivity)
+            adapter = carAdapter
+        }
+        updateUI()
     }
 
     private fun updateUI(){
         lifecycleScope.launch() {
-            cars = repository.getAllcars()
+            cars = repository.getAllCars()
 
             binding.tvSinRegistros.visibility=
                 if (cars.isEmpty()){

@@ -5,9 +5,12 @@ import android.app.Dialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import com.hamv15.modulo6practica1.R
@@ -23,7 +26,7 @@ import java.io.IOException
 
 class CarDialog(
     private val newCar: Boolean = true,
-    private var car: CarEntity =  CarEntity(
+    private val car: CarEntity =  CarEntity(
         carMaker="",
         model= "",
         carYear=0),
@@ -46,15 +49,15 @@ class CarDialog(
 
     private lateinit var repository: CarRepository
 
-
+    private lateinit var fabricanteGuardado: String
 
 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dropdownOptions = arrayOf("Opción 1", "Opción 2", "Opción 3", "Opción 4")
 
-        val adapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, dropdownOptions)
-        val autoCompleteTextView = view?.findViewById<AutoCompleteTextView>(R.id.actvDropdown)
+        fabricanteGuardado=car.carMaker
+        //Variable para almacenar el fabricante seleccionado
+        var fabricanteSeleccionado: String= ""
 
         _binding = CarDialogBinding.inflate(requireActivity().layoutInflater)
 
@@ -62,10 +65,43 @@ class CarDialog(
 
         repository = (requireContext().applicationContext as Modulo6Practica1App).repository
 
-        autoCompleteTextView?.setAdapter(adapter)
+        // Configura el adaptador para el Spinner
+        val fabricantesCarros = arrayOf("Selecciona un fabricante", "Cupra", "Ford", "Toyota") // Aquí puedes establecer tus opciones para el droplist
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, fabricantesCarros)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spMaker.adapter = adapter // Aquí asigna el adaptador al Spinner
+
+        // Escucha los cambios en la selección del Spinner
+        binding.spMaker.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                fabricanteSeleccionado = fabricantesCarros[position]
+                //Se valida que el seleccionado sea diferente del guardado para habilidar validacion del formulario
+                if (fabricanteGuardado != fabricanteSeleccionado){
+                    // Si la selección es diferente al guardado, se disparan validaciones del formulario
+                    saveButton?.isEnabled = validateFields()
+                }else{
+                    saveButton?.isEnabled = false
+                }
+
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                // No es necesario hacer nada aquí si no se selecciona nada
+
+            }
+        }
 
         binding.apply {
             //Se fijan los datos del elemento
+
+            when (car.carMaker) {
+                "Cupra" -> binding.spMaker.setSelection(1)
+                "Ford" -> binding.spMaker.setSelection(2)
+                "Toyota" -> binding.spMaker.setSelection(3)
+                else -> binding.spMaker.setSelection(0)
+            }
+            binding.tietModel.setText(car.model)
+            binding.tietYear.setText(car.carYear.toString())
         }
 
         //Funcionamiento del dialog para insercion, actualizacion y borrado
@@ -76,14 +112,14 @@ class CarDialog(
                 {
                     //Accion de guardar
                     car.apply {
-                        carMaker=binding.tietTitle.text.toString().trim()
-                        model=binding.tietGenre.text.toString().trim()
-                        carYear=binding.tietDeveloper.text.toString().trim().toInt()
+                        carMaker=fabricanteSeleccionado
+                        model=binding.tietModel.text.toString().trim()
+                        carYear=binding.tietYear.text.toString().trim().toInt()
                     }
                     try {
                         lifecycleScope.launch(Dispatchers.IO) {
                             val result = async {
-                                repository.insertcar(car)
+                                repository.insertCar(car)
                             }
                             result.await()
                             withContext(Dispatchers.Main){
@@ -107,14 +143,14 @@ class CarDialog(
                 {
                     //Accion de actualizar
                     car.apply {
-                        carMaker=binding.tietTitle.text.toString().trim()
-                        model=binding.tietGenre.text.toString().trim()
-                        carYear=binding.tietDeveloper.text.toString().trim().toInt()
+                        carMaker=fabricanteSeleccionado
+                        model=binding.tietModel.text.toString().trim()
+                        carYear=binding.tietYear.text.toString().trim().toInt()
                     }
                     try {
                         lifecycleScope.launch(Dispatchers.IO) {
                             val result = async {
-                                repository.updatecar(car)
+                                repository.updateCar(car)
                             }
                             result.await()
                             withContext(Dispatchers.Main){
@@ -139,11 +175,11 @@ class CarDialog(
                             try {
                                 lifecycleScope.launch(Dispatchers.IO) {
                                     val result = async {
-                                        repository.deletecar(car)
+                                        repository.deleteCar(car)
                                     }
                                     result.await()
                                     withContext(Dispatchers.Main){
-                                        message(getString(R.string.eliminado_exitoso))
+                                        message(context.getString(R.string.eliminado_exitoso))
                                         updateUI()
                                     }
                                 }
@@ -155,6 +191,7 @@ class CarDialog(
                             }
                         }
                         .setNegativeButton("Cancelar"){_, _ ->
+
                         }
                         .create()
                         .show()
@@ -174,7 +211,8 @@ class CarDialog(
         saveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
         saveButton?.isEnabled = false
 
-        binding.tietTitle.addTextChangedListener(object: TextWatcher {
+
+        binding.tietModel.addTextChangedListener(object: TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
             }
@@ -188,21 +226,7 @@ class CarDialog(
             }
 
         })
-        binding.tietGenre.addTextChangedListener(object: TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                saveButton?.isEnabled = validateFields()
-            }
-
-        })
-        binding.tietDeveloper.addTextChangedListener(object: TextWatcher {
+        binding.tietYear.addTextChangedListener(object: TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
             }
@@ -219,10 +243,14 @@ class CarDialog(
 
     }
 
-    private fun validateFields(): Boolean =
-        (binding.tietTitle.text.toString().isNotEmpty() &&
-                binding.tietGenre.text.toString().isNotEmpty() &&
-                binding.tietDeveloper.text.toString().isNotEmpty())
+
+    private fun validateFields(): Boolean{
+        val fabricanteSeleccionado = binding.spMaker.selectedItem?.toString() ?: ""
+        val modelo = binding.tietModel.text.toString()
+        val year = binding.tietYear.text.toString()
+        return fabricanteSeleccionado != "Selecciona un fabricante"  && modelo.isNotEmpty() && year.isNotEmpty()
+    }
+
 
     private fun buildDialog(
         btn1Text: String,
