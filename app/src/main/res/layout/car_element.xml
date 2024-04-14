@@ -27,17 +27,17 @@
                 android:layout_width="72dp"
                 android:layout_height="72dp"
                 android:layout_margin="8dp"
-                android:contentDescription="Imagen"
+                android:contentDescription="@string/ivTextImagen"
                 android:outlineProvider="bounds"
                 android:padding="4dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/gamepad"
+                android:src="@drawable/cupra"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/tvTitle"
+                android:id="@+id/tvModelo"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -51,10 +51,10 @@
                 app:layout_constraintStart_toEndOf="@+id/ivIcon"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.16"
-                tools:text="Título del juego" />
+                tools:text="@string/tvCarModelText" />
 
             <TextView
-                android:id="@+id/tvGenre"
+                android:id="@+id/tvFabricante"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -64,12 +64,12 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@id/ivIcon"
-                app:layout_constraintTop_toBottomOf="@id/tvTitle"
+                app:layout_constraintTop_toBottomOf="@id/tvModelo"
                 app:layout_constraintVertical_bias="0.2"
-                tools:text="Género" />
+                tools:text="@string/tvFabricanteText" />
 
             <TextView
-                android:id="@+id/tvDeveloper"
+                android:id="@+id/tvYear"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
@@ -80,8 +80,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/ivIcon"
-                app:layout_constraintTop_toBottomOf="@id/tvGenre"
-                tools:text="Developer" />
+                app:layout_constraintTop_toBottomOf="@id/tvFabricante"
+                tools:text="@string/tvYearText" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

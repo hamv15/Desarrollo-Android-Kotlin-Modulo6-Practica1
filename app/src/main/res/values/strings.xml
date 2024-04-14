@@ -3,4 +3,32 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="eliminado_exitoso">Eliminado exitoso</string>
+    <string name="tvEmpty">¡No hay registros!</string>
+    <string name="fabAddElement">Agregrar elemento</string>
+    <string name="header">Header</string>
+    <string name="tiSelectOpt">Seleccionar opción</string>
+    <string name="tvCarMaker">Fabricante</string>
+    <string name="hintModelo">Modelo</string>
+    <string name="hintYear">Año</string>
+    <string name="ivTextImagen">Imagen</string>
+    <string name="tvCarModelText">Modelo del carro</string>
+    <string name="tvFabricanteText">Fabricante</string>
+    <string name="tvYearText">Año</string>
+    <string name="lsCarMakerOp0">Selecciona un fabricante</string>
+    <string name="lsCarMakerOp1">Cupra</string>
+    <string name="lsCarMakerOp2">Ford</string>
+    <string name="lsCarMakerOp3">Toyota</string>
+    <string name="dialogBtnSave">Guardar</string>
+    <string name="dialogBtnCancel">Cancelar</string>
+    <string name="msjSaveSucc">Carro guardado exitosamente</string>
+    <string name="msjErrorSave">Error al guardar el carro</string>
+    <string name="dialogBtnUpdate">Actualizar</string>
+    <string name="dialogBtnDelete">Borrar</string>
+    <string name="msjUpdateSucc">Carro actualizado exitosamente</string>
+    <string name="msjSaveError">Error al guardar el carro</string>
+    <string name="titleDialog">Confirmación</string>
+    <string name="msjDialogDelete">¿Realmente deseas eliminar el carro %1$s?</string>
+    <string name="dialogBtnConfirm">Aceptar</string>
+    <string name="msjDialogDeleteError">Error al borrar el carro</string>
+    <string name="modalTitleCarro">Carro</string>
 </resources>

@@ -17,6 +17,6 @@ data class CarEntity(
     @ColumnInfo(name = "model")
     var model:String,
 
-    @ColumnInfo(name = "car_year", defaultValue = "Desconocido")
+    @ColumnInfo(name = "car_year", defaultValue = "0")
     var carYear: Int
 )
